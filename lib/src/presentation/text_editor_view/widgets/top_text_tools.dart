@@ -5,8 +5,7 @@ import 'package:stories_editor/src/presentation/widgets/tool_button.dart';
 
 class TopTextTools extends StatelessWidget {
   final void Function() onDone;
-  final bool isRtl;
-  const TopTextTools({Key? key, required this.onDone, required this.isRtl}) : super(key: key);
+  const TopTextTools({super.key, required this.onDone});
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +138,9 @@ class TopTextTools extends StatelessWidget {
                           color: Colors.transparent,
                           border: Border.all(color: Colors.white, width: 1.5),
                           borderRadius: BorderRadius.circular(15)),
-                      child: Text(
-                        isRtl ? 'تایید' : 'Done',
-                        style: const TextStyle(
+                      child: const Text(
+                        'Done',
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w500,

@@ -59,9 +59,6 @@ class MainView extends StatefulWidget {
   /// gallery thumbnail quality
   final int? galleryThumbnailQuality;
 
-  /// rtl languages
-  final bool isRtl;
-
   /// editor custom color palette list
   List<Color>? colorList;
 
@@ -69,7 +66,6 @@ class MainView extends StatefulWidget {
       {Key? key,
       required this.giphyKey,
       required this.onDone,
-      required this.isRtl,
       this.middleBottomWidget,
       this.colorList,
       this.isCustomFontList,
@@ -139,14 +135,20 @@ class _MainViewState extends State<MainView> {
         color: widget.editorBackgroundColor == Colors.transparent
             ? Colors.black
             : widget.editorBackgroundColor ?? Colors.black,
-        child: Consumer6<ControlNotifier, DraggableWidgetNotifier, ScrollNotifier, GradientNotifier, PaintingNotifier,
+        child: Consumer6<
+            ControlNotifier,
+            DraggableWidgetNotifier,
+            ScrollNotifier,
+            GradientNotifier,
+            PaintingNotifier,
             TextEditingNotifier>(
-          builder: (context, controlNotifier, itemProvider, scrollProvider, colorProvider, paintingProvider,
-              editingProvider, child) {
+          builder: (context, controlNotifier, itemProvider, scrollProvider,
+              colorProvider, paintingProvider, editingProvider, child) {
             return SafeArea(
               //top: false,
               child: ScrollablePageView(
-                scrollPhysics: (controlNotifier.mediaPath.isEmpty && controlNotifier.mediaByte.isEmpty) &&
+                scrollPhysics: (controlNotifier.mediaPath.isEmpty &&
+                        controlNotifier.mediaByte.isEmpty) &&
                     itemProvider.draggableWidget.isEmpty &&
                     !controlNotifier.isPainting &&
                     !controlNotifier.isTextEditing,
@@ -165,7 +167,8 @@ class _MainViewState extends State<MainView> {
                             onScaleStart: _onScaleStart,
                             onScaleUpdate: _onScaleUpdate,
                             onTap: () {
-                              controlNotifier.isTextEditing = !controlNotifier.isTextEditing;
+                              controlNotifier.isTextEditing =
+                                  !controlNotifier.isTextEditing;
                             },
                             child: Align(
                               alignment: Alignment.topCenter,
@@ -176,18 +179,26 @@ class _MainViewState extends State<MainView> {
                                   child: RepaintBoundary(
                                     key: contentKey,
                                     child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 200),
+                                      duration:
+                                          const Duration(milliseconds: 200),
                                       decoration: BoxDecoration(
-                                          gradient: (controlNotifier.mediaPath.isEmpty &&
-                                                  controlNotifier.mediaByte.isEmpty)
+                                          gradient: (controlNotifier
+                                                      .mediaPath.isEmpty &&
+                                                  controlNotifier
+                                                      .mediaByte.isEmpty)
                                               ? LinearGradient(
-                                                  colors:
-                                                      controlNotifier.gradientColors![controlNotifier.gradientIndex],
+                                                  colors: controlNotifier
+                                                          .gradientColors![
+                                                      controlNotifier
+                                                          .gradientIndex],
                                                   begin: Alignment.topLeft,
                                                   end: Alignment.bottomRight,
                                                 )
                                               : LinearGradient(
-                                                  colors: [colorProvider.color1, colorProvider.color2],
+                                                  colors: [
+                                                    colorProvider.color1,
+                                                    colorProvider.color2
+                                                  ],
                                                   begin: Alignment.topCenter,
                                                   end: Alignment.bottomCenter,
                                                 )),
@@ -200,12 +211,16 @@ class _MainViewState extends State<MainView> {
                                             /// in this case photo view works as a main background container to manage
                                             /// the gestures of all movable items.
                                             PhotoView.customChild(
+                                              backgroundDecoration:
+                                                  const BoxDecoration(
+                                                      color:
+                                                          Colors.transparent),
                                               child: Container(),
-                                              backgroundDecoration: const BoxDecoration(color: Colors.transparent),
                                             ),
 
                                             ///list items
-                                            ...itemProvider.draggableWidget.map((editableItem) {
+                                            ...itemProvider.draggableWidget
+                                                .map((editableItem) {
                                               return DraggableWidget(
                                                 context: context,
                                                 draggableWidget: editableItem,
@@ -237,17 +252,26 @@ class _MainViewState extends State<MainView> {
                                                 alignment: Alignment.topCenter,
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(25),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
                                                   ),
                                                   child: RepaintBoundary(
                                                     child: SizedBox(
-                                                      width: screenUtil.screenWidth,
-                                                      child: StreamBuilder<List<PaintingModel>>(
-                                                        stream: paintingProvider.linesStreamController.stream,
-                                                        builder: (context, snapshot) {
+                                                      width: screenUtil
+                                                          .screenWidth,
+                                                      child: StreamBuilder<
+                                                          List<PaintingModel>>(
+                                                        stream: paintingProvider
+                                                            .linesStreamController
+                                                            .stream,
+                                                        builder: (context,
+                                                            snapshot) {
                                                           return CustomPaint(
                                                             painter: Sketcher(
-                                                              lines: paintingProvider.lines,
+                                                              lines:
+                                                                  paintingProvider
+                                                                      .lines,
                                                             ),
                                                           );
                                                         },
@@ -287,7 +311,8 @@ class _MainViewState extends State<MainView> {
                                       Shadow(
                                           offset: const Offset(1.0, 1.0),
                                           blurRadius: 3.0,
-                                          color: Colors.black45.withOpacity(0.3))
+                                          color:
+                                              Colors.black45.withOpacity(0.3))
                                     ],
                                   ),
                                 ),
@@ -296,13 +321,13 @@ class _MainViewState extends State<MainView> {
 
                           /// top tools
                           Visibility(
-                            visible: !controlNotifier.isTextEditing && !controlNotifier.isPainting,
+                            visible: !controlNotifier.isTextEditing &&
+                                !controlNotifier.isPainting,
                             child: Align(
                                 alignment: Alignment.topCenter,
                                 child: TopTools(
                                   contentKey: contentKey,
                                   context: context,
-                                  isRtl: widget.isRtl,
                                 )),
                           ),
 
@@ -310,7 +335,8 @@ class _MainViewState extends State<MainView> {
                           DeleteItem(
                             key: trashKey,
                             activeItem: _activeItem,
-                            animationsDuration: const Duration(milliseconds: 300),
+                            animationsDuration:
+                                const Duration(milliseconds: 300),
                             isDeletePosition: _isDeletePosition,
                           ),
 
@@ -319,7 +345,6 @@ class _MainViewState extends State<MainView> {
                             visible: controlNotifier.isTextEditing,
                             child: TextEditor(
                               context: context,
-                              isRtl: widget.isRtl,
                             ),
                           ),
 
@@ -363,12 +388,14 @@ class _MainViewState extends State<MainView> {
                         thumbnailQuality: widget.galleryThumbnailQuality,
                         singlePick: true,
                         onlyImages: true,
-                        appBarColor: widget.editorBackgroundColor ?? Colors.black,
+                        appBarColor:
+                            widget.editorBackgroundColor ?? Colors.black,
                         gridViewPhysics: itemProvider.draggableWidget.isEmpty
                             ? const NeverScrollableScrollPhysics()
                             : const ScrollPhysics(),
                         pathList: (path) {
-                          controlNotifier.mediaPath = path.first.path!.toString();
+                          controlNotifier.mediaPath =
+                              path.first.path!.toString();
                           if (controlNotifier.mediaPath.isNotEmpty) {
                             itemProvider.draggableWidget.insert(
                                 0,
@@ -376,8 +403,9 @@ class _MainViewState extends State<MainView> {
                                   ..type = ItemType.image
                                   ..position = const Offset(0.0, 0));
                           }
-                          scrollProvider.pageController
-                              .animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          scrollProvider.pageController.animateToPage(0,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeIn);
                         },
                         appBarLeadingWidget: Padding(
                           padding: const EdgeInsets.only(bottom: 15, right: 15),
@@ -386,10 +414,12 @@ class _MainViewState extends State<MainView> {
                             child: AnimatedOnTapButton(
                               onTap: () {
                                 scrollProvider.pageController.animateToPage(0,
-                                    duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeIn);
                               },
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
@@ -397,10 +427,12 @@ class _MainViewState extends State<MainView> {
                                       color: Colors.white,
                                       width: 1.2,
                                     )),
-                                child: Text(
-                                  widget.isRtl ? 'انصراف' : 'Cancel',
-                                  style:
-                                      const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ),
                             ),
@@ -417,7 +449,8 @@ class _MainViewState extends State<MainView> {
 
   /// validate pop scope gesture
   Future<bool> _popScope() async {
-    final controlNotifier = Provider.of<ControlNotifier>(context, listen: false);
+    final controlNotifier =
+        Provider.of<ControlNotifier>(context, listen: false);
 
     /// change to false text editing
     if (controlNotifier.isTextEditing) {
@@ -433,7 +466,8 @@ class _MainViewState extends State<MainView> {
 
     /// show close dialog
     else if (!controlNotifier.isTextEditing && !controlNotifier.isPainting) {
-      return widget.onBackPress ?? exitDialog(context: context, contentKey: contentKey, isRtl: widget.isRtl);
+      return widget.onBackPress ??
+          exitDialog(context: context, contentKey: contentKey);
     }
     return false;
   }
@@ -469,8 +503,12 @@ class _MainViewState extends State<MainView> {
 
   /// active delete widget with offset position
   void _deletePosition(EditableItem item, PointerMoveEvent details) {
-    var trashY = (trashKey.globalPaintBounds!.bottom - trashKey.globalPaintBounds!.left).abs();
-    var trashX = (trashKey.globalPaintBounds!.top - trashKey.globalPaintBounds!.right).abs();
+    var trashY =
+        (trashKey.globalPaintBounds!.bottom - trashKey.globalPaintBounds!.left)
+            .abs();
+    var trashX =
+        (trashKey.globalPaintBounds!.top - trashKey.globalPaintBounds!.right)
+            .abs();
 
     var objectX = details.position.dx;
     var objectY = details.position.dy;
@@ -502,7 +540,9 @@ class _MainViewState extends State<MainView> {
 
   /// delete item widget with offset position
   void _deleteItemOnCoordinates(EditableItem item, PointerUpEvent details) {
-    var _itemProvider = Provider.of<DraggableWidgetNotifier>(context, listen: false).draggableWidget;
+    var _itemProvider =
+        Provider.of<DraggableWidgetNotifier>(context, listen: false)
+            .draggableWidget;
     _inAction = false;
     if (item.type == ItemType.image) {
     } else if (item.type == ItemType.text &&

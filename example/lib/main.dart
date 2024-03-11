@@ -47,7 +47,6 @@ class _ExampleState extends State<Example> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => StoriesEditor(
-                            isRtl: true,
                             giphyKey: 'C4dMA7Q19nqEGdpfj82T8ssbOeZIylD4',
                             //fontFamilyList: const ['Shizuru', 'Aladin'],
                             galleryThumbnailQuality: 300,

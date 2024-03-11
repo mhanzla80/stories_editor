@@ -9,16 +9,15 @@ import 'package:stories_editor/src/domain/providers/notifiers/draggable_widget_n
 import 'package:stories_editor/src/domain/providers/notifiers/painting_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
 import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
-import 'package:stories_editor/src/presentation/utils/Extensions/hexColor.dart';
 import 'package:stories_editor/src/presentation/utils/constants/app_enums.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 
 /// create item of type GIF
 Future createGiphyItem(
     {required BuildContext context, required giphyKey}) async {
-  final _editableItem =
+  final editableItem =
       Provider.of<DraggableWidgetNotifier>(context, listen: false);
-  _editableItem.giphy = await ModalGifPicker.pickModalSheetGif(
+  editableItem.giphy = await ModalGifPicker.pickModalSheetGif(
     context: context,
     apiKey: giphyKey,
     rating: GiphyRating.r,
@@ -30,16 +29,16 @@ Future createGiphyItem(
   );
 
   /// create item of type GIF
-  if (_editableItem.giphy != null) {
-    _editableItem.draggableWidget.add(EditableItem()
+  if (editableItem.giphy != null) {
+    editableItem.draggableWidget.add(EditableItem()
       ..type = ItemType.gif
-      ..gif = _editableItem.giphy!
+      ..gif = editableItem.giphy!
       ..position = const Offset(0.0, 0.0));
   }
 }
 
 /// custom exit dialog
-Future<bool> exitDialog({required context, required contentKey, required bool isRtl}) async {
+Future<bool> exitDialog({required context, required contentKey}) async {
   return (await showDialog(
         context: context,
         barrierColor: Colors.black38,
@@ -52,7 +51,8 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Container(
-              padding: const EdgeInsets.only(top: 25, bottom: 5, right: 10, left: 10),
+              padding: const EdgeInsets.only(
+                  top: 25, bottom: 5, right: 10, left: 10),
               alignment: Alignment.center,
               height: 320,
               decoration: BoxDecoration(
@@ -68,19 +68,18 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
-                    isRtl ? 'حذف تغییرات' :'Discard Edits?',
-                    style: const TextStyle(
+                  const Text(
+                    'Discard Edits?',
+                    style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
                         letterSpacing: 0.5),
                   ),
                   20.verticalSpace,
-                  Text(
-                    isRtl ? "اگر به عقب برگردید، تمام ویرایش هایی را که انجام داده اید از دست خواهید داد" :
+                  const Text(
                     "If you go back now, you'll lose all the edits you've made.",
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
@@ -89,6 +88,7 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
                   ),
 
                   20.verticalSpace,
+
                   /// discard
                   AnimatedOnTapButton(
                     onTap: () async {
@@ -99,7 +99,7 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isRtl ? "دورانداختن" : 'Discard',
+                          'Discard',
                           style: TextStyle(
                               fontSize: 16,
                               color: Colors.redAccent.shade200,
@@ -121,13 +121,13 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
                   /// save and exit
                   AnimatedOnTapButton(
                     onTap: () async {
-                      final _paintingProvider =
+                      final paintingProvider =
                           Provider.of<PaintingNotifier>(context, listen: false);
-                      final _widgetProvider =
+                      final widgetProvider =
                           Provider.of<DraggableWidgetNotifier>(context,
                               listen: false);
-                      if (_paintingProvider.lines.isNotEmpty ||
-                          _widgetProvider.draggableWidget.isNotEmpty) {
+                      if (paintingProvider.lines.isNotEmpty ||
+                          widgetProvider.draggableWidget.isNotEmpty) {
                         /// save image
                         var response = await takePicture(
                             contentKey: contentKey,
@@ -135,20 +135,20 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
                             saveToGallery: true);
                         if (response) {
                           _dispose(
-                              context: context, message: isRtl ? "باموفقیت ذخیره شد" : 'Successfully saved');
+                              context: context, message: 'Successfully saved');
                         } else {
-                          _dispose(context: context, message: isRtl ? "خطا" : 'Error');
+                          _dispose(context: context, message: 'Error');
                         }
                       } else {
-                        _dispose(context: context, message: isRtl ? "تغییراتی انجام نداده‌اید" : 'Draft Empty');
+                        _dispose(context: context, message: 'Draft Empty');
                       }
                     },
-                    child:  Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isRtl ? "ذخیره پیش‌نویس" : 'Save Draft',
-                          style: const TextStyle(
+                          'Save Draft',
+                          style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -171,12 +171,12 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
                     onTap: () {
                       Navigator.of(context).pop(false);
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isRtl ? "لغو" : 'Cancel',
-                          style: const TextStyle(
+                          'Cancel',
+                          style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -196,19 +196,19 @@ Future<bool> exitDialog({required context, required contentKey, required bool is
 }
 
 _resetDefaults({required BuildContext context}) {
-  final _paintingProvider =
+  final paintingProvider =
       Provider.of<PaintingNotifier>(context, listen: false);
-  final _widgetProvider =
+  final widgetProvider =
       Provider.of<DraggableWidgetNotifier>(context, listen: false);
-  final _controlProvider = Provider.of<ControlNotifier>(context, listen: false);
-  final _editingProvider =
+  final controlProvider = Provider.of<ControlNotifier>(context, listen: false);
+  final editingProvider =
       Provider.of<TextEditingNotifier>(context, listen: false);
-  _paintingProvider.lines.clear();
-  _widgetProvider.draggableWidget.clear();
-  _widgetProvider.setDefaults();
-  _paintingProvider.resetDefaults();
-  _editingProvider.setDefaults();
-  _controlProvider.mediaPath = '';
+  paintingProvider.lines.clear();
+  widgetProvider.draggableWidget.clear();
+  widgetProvider.setDefaults();
+  paintingProvider.resetDefaults();
+  editingProvider.setDefaults();
+  controlProvider.mediaPath = '';
 }
 
 _dispose({required context, required message}) {

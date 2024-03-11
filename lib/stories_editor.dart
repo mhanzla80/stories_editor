@@ -3,7 +3,6 @@ library stories_editor;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/control_provider.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/draggable_widget_notifier.dart';
@@ -49,14 +48,10 @@ class StoriesEditor extends StatefulWidget {
   /// gallery thumbnail quality
   final int? galleryThumbnailQuality;
 
-  /// rtl languages
-  final bool isRtl;
-
   const StoriesEditor(
-      {Key? key,
+      {super.key,
       required this.giphyKey,
       required this.onDone,
-      required this.isRtl,
       this.middleBottomWidget,
       this.colorList,
       this.gradientColors,
@@ -65,19 +60,18 @@ class StoriesEditor extends StatefulWidget {
       this.onBackPress,
       this.onDoneButtonStyle,
       this.editorBackgroundColor,
-      this.galleryThumbnailQuality})
-      : super(key: key);
+      this.galleryThumbnailQuality});
 
   @override
-  _StoriesEditorState createState() => _StoriesEditorState();
+  State<StoriesEditor> createState() => _StoriesEditorState();
 }
 
 class _StoriesEditorState extends State<StoriesEditor> {
   @override
   void initState() {
-    Paint.enableDithering = true;
     WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black,
     ));
@@ -110,7 +104,6 @@ class _StoriesEditorState extends State<StoriesEditor> {
         child: MainView(
           giphyKey: widget.giphyKey,
           onDone: widget.onDone,
-          isRtl: widget.isRtl,
           fontFamilyList: widget.fontFamilyList,
           isCustomFontList: widget.isCustomFontList,
           middleBottomWidget: widget.middleBottomWidget,
